@@ -1,0 +1,86 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.zcp.web</groupId>
+	<artifactId>zcp-webapp</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>war</packaging>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<junit.version>3.8.1</junit.version>
+		<spring.version>3.2.7.RELEASE</spring.version>
+		<javax.servlet.jsp>2.1</javax.servlet.jsp>
+		<javax.servlet.servlet-api.version>3.0</javax.servlet.servlet-api.version>
+		<javax.servlet.jstl.version>1.2</javax.servlet.jstl.version>
+		<druid.version>0.2.19</druid.version>
+		<jdbc.driver.version>5.1.13</jdbc.driver.version>
+		<log4j.version>1.2.17</log4j.version>
+	</properties>
+	<dependencies>
+		<!-- Junit Test -->
+		<dependency>
+	      <groupId>junit</groupId>
+	      <artifactId>junit</artifactId>
+	      <version>${junit.version}</version>
+	      <scope>test</scope>
+	    </dependency>
+	    <!-- Spring3 -->
+	    <dependency>
+	    	<groupId>org.springframework</groupId>
+	    	<artifactId>spring-web</artifactId>
+	    	<version>${spring.version}</version>
+	    </dependency>
+	    <dependency>
+	    	<groupId>org.springframework</groupId>
+	    	<artifactId>spring-core</artifactId>
+	    	<version>${spring.version}</version>
+	    </dependency>
+	    <dependency>
+	    	<groupId>org.springframework</groupId>
+	    	<artifactId>spring-webmvc</artifactId>
+	    	<version>${spring.version}</version>
+	    </dependency>
+	    <dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+	    <!-- Java Servlet -->
+	    <dependency>
+	    	<groupId>javax.servlet.jsp</groupId>
+	    	<artifactId>jsp-api</artifactId>
+	    	<version>${javax.servlet.jsp}</version>
+	    </dependency>
+	    <dependency>
+	    	<groupId>javax.servlet</groupId>
+	    	<artifactId>servlet-api</artifactId>
+	    	<version>${javax.servlet.servlet-api.version}</version>
+	    </dependency>
+	    <dependency>
+	    	<groupId>javax.servlet</groupId>
+	    	<artifactId>jstl</artifactId>
+	    	<version>${javax.servlet.jstl.version}</version>
+	    </dependency>
+	    <!-- jdbc driver -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${jdbc.driver.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+	    <!-- connection pool -->
+		<dependency>
+		     <groupId>com.alibaba</groupId>
+		     <artifactId>druid</artifactId>
+		     <version>${druid.version}</version>
+		</dependency>
+		<!-- log4j -->
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+	</dependencies>
+</project>
