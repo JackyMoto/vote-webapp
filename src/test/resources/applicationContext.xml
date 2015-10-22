@@ -16,8 +16,5 @@
 		http://www.springframework.org/schema/tx 
 		http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 		
-		<!-- 加载配置属性文件 -->
-		<context:property-placeholder ignore-unresolvable="true" location="classpath*:/application.properties" />
-		
 		<bean id="service" class="com.zcp.vote.service.impl.VoteServiceImpl"></bean>
 </beans>

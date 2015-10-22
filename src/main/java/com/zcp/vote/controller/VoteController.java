@@ -26,9 +26,6 @@ public class VoteController {
 	@Autowired
 	public VoteService service;
 	
-	@Autowired
-	private  HttpServletRequest request;
-	
 	@RequestMapping(value="/vote/ranklist.do")
 	public String voteRankList(){
 		return null;
@@ -40,11 +37,9 @@ public class VoteController {
 	}
 	
 	@RequestMapping(value="/vote/addvote.do")
-	public Map<String, String> addVote(String vname, String vdesc, String imgPic, String qrPic) {
-		int result = service.addVoteObject(vname, vdesc, imgPic, qrPic);
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("msg", String.valueOf(result));
-		return map;
+	public String addVote(String vname, String vdesc, String imgPic, String qrPic) {
+		service.addVoteObject(vname, vdesc, imgPic, qrPic);
+		return "redirect:/vote/pagelist.do";
 	}
 	
 	@RequestMapping(value="/vote/pagelist.do")

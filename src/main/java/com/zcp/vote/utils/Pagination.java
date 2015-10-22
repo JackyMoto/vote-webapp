@@ -46,10 +46,10 @@ public class Pagination<T> extends JdbcDaoSupport {
 	public Pagination(String sql) {
 		if (jTemplate == null) {
 			throw new IllegalArgumentException(
-					"com.deity.ranking.util.Pagination.jTemplate is null,please initial it first. ");
+					"com.zcp.vote.utils.Pagination.jTemplate is null, please initial it first. ");
 		} else if (sql.equals("")) {
 			throw new IllegalArgumentException(
-					"com.deity.ranking.util.Pagination.sql is empty,please initial it first. ");
+					"com.zcp.vote.utils.Pagination.sql is empty,please initial it first. ");
 		}
 		new Pagination<T>(sql, currentPage, NUMBERS_PER_PAGE, jTemplate, null);
 	}
@@ -71,10 +71,10 @@ public class Pagination<T> extends JdbcDaoSupport {
 		this.currentPage = currentPage;
 		if (jTemplate == null) {
 			throw new IllegalArgumentException(
-					"com.deity.ranking.util.Pagination.jTemplate is null,please initial it first. ");
+					"com.zcp.vote.utils.Pagination.jTemplate is null,please initial it first. ");
 		} else if (sql == null || sql.equals("")) {
 			throw new IllegalArgumentException(
-					"com.deity.ranking.util.Pagination.sql is empty,please initial it first. ");
+					"com.zcp.vote.utils.Pagination.sql is empty,please initial it first. ");
 		}
 		// 设置每页显示记录数
 		setNumPerPage(numPerPage);

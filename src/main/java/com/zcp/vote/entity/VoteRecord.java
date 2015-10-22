@@ -1,9 +1,12 @@
 package com.zcp.vote.entity;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class VoteRecord {
+public class VoteRecord implements Serializable {
 	
+	private static final long serialVersionUID = -270375331034873238L;
+
 	private int id;
 	
 	private int voteId;
