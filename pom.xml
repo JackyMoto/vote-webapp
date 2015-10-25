@@ -12,7 +12,7 @@
 		<junit.version>4.12</junit.version>
 		<spring.version>3.2.7.RELEASE</spring.version>
 		<javax.servlet.jsp>2.1</javax.servlet.jsp>
-		<javax.servlet.servlet-api.version>3.0</javax.servlet.servlet-api.version>
+		<javax.servlet.servlet-api.version>3.0.1</javax.servlet.servlet-api.version>
 		<javax.servlet.jstl.version>1.2</javax.servlet.jstl.version>
 		<druid.version>0.2.19</druid.version>
 		<jdbc.driver.version>5.1.13</jdbc.driver.version>
@@ -58,7 +58,7 @@
 	    </dependency>
 	    <dependency>
 	    	<groupId>javax.servlet</groupId>
-	    	<artifactId>servlet-api</artifactId>
+	    	<artifactId>javax.servlet-api</artifactId>
 	    	<version>${javax.servlet.servlet-api.version}</version>
 	    </dependency>
 	    <dependency>
@@ -134,4 +134,17 @@
 		    <scope>test</scope>
 		</dependency>
 	</dependencies>
+	
+	<build>
+		<plugins>
+		   <plugin>
+		    <artifactId>maven-compiler-plugin</artifactId>
+		    <version>3.0</version>
+	    	<configuration>
+		     	<source>1.7</source>
+		     	<target>1.7</target>
+		    </configuration>
+		   </plugin>
+		</plugins>	
+	</build>
 </project>
