@@ -55,7 +55,7 @@ public class VoteControllerTest {
 		VoteObject v2 = new VoteObject("dnf", "dnf", "dnf.png", "dnf.png");
 		VoteObject v3 = new VoteObject("cod", "cod", "cod.png", "cod.png");
 		
-		Mockito.when(service.getVoteList()).thenReturn(Arrays.asList(v1, v2, v3));
+//		Mockito.when(service.getVoteList()).thenReturn(Arrays.asList(v1, v2, v3));
 		
 		mockMvc.perform(MockMvcRequestBuilders.get("/vote/pagelist.do"))
 		   .andExpect(MockMvcResultMatchers.status().isOk())

@@ -3,7 +3,6 @@ package com.zcp.vote.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.zcp.vote.dao.VoteDao;
 import com.zcp.vote.dao.impl.VoteRedisDaoImpl;

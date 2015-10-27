@@ -50,6 +50,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<a href="#">19</a>
 				<a href="#">尾页</a>
 			</td>
+			<td><a href="vote/addvotepage.do">添加投票项</a></td>
 		</tr>
 	</table>
 </body>
