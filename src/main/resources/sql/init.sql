@@ -18,4 +18,10 @@ CREATE TABLE "vote_record" (
   PRIMARY KEY ("id")
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
+CREATE TABLE "vote_category" (
+  "id" int(11) NOT NULL AUTO_INCREMENT,
+  "cname" varchar(20) DEFAULT NULL,
+  PRIMARY KEY ("id")
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
 
