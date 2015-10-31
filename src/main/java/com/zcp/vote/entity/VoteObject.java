@@ -10,7 +10,7 @@ public class VoteObject implements Serializable {
 	
 	private String vname;
 	
-	private String vdesc;
+	private int cid;
 	
 	private String imgPic;
 	
@@ -26,9 +26,9 @@ public class VoteObject implements Serializable {
 		
 	}
 
-	public VoteObject(String vname, String vdesc, String imgPic, String qrPic) {
+	public VoteObject(String vname, int cid, String imgPic, String qrPic) {
 		this.vname = vname;
-		this.vdesc = vdesc;
+		this.cid = cid;
 		this.imgPic = imgPic;
 		this.qrPic = qrPic;
 		this.currentRank = 0;
@@ -52,12 +52,12 @@ public class VoteObject implements Serializable {
 		this.vname = vname;
 	}
 
-	public String getVdesc() {
-		return vdesc;
+	public int getCid() {
+		return cid;
 	}
 
-	public void setVdesc(String vdesc) {
-		this.vdesc = vdesc;
+	public void setCid(int cid) {
+		this.cid = cid;
 	}
 
 	public String getImgPic() {

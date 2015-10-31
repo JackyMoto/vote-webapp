@@ -18,8 +18,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<td><input name="vname"/></td>
 			</tr>
 			<tr>
-				<td>描述:</td>
-				<td><input name="vdesc"/></td>
+				<td>类型:</td>
+				<td><input name="cid"/></td>
 			</tr>
 			<tr>
 				<td>图片:</td>

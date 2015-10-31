@@ -4,10 +4,12 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 public class VoteRecord implements Serializable {
-	
-	private static final long serialVersionUID = -270375331034873238L;
+
+	private static final long serialVersionUID = -8377318363099352627L;
 
 	private int id;
+	
+	private int cid;
 	
 	private int voteId;
 	
@@ -19,8 +21,9 @@ public class VoteRecord implements Serializable {
 		
 	}
 	
-	public VoteRecord(int voteId, String voteIP) {
+	public VoteRecord(int voteId, int cid, String voteIP) {
 		this.voteId = voteId;
+		this.cid = cid;
 		this.voteIP = voteIP;
 		this.voteTime = new Timestamp(System.currentTimeMillis());
 	}
@@ -55,5 +58,13 @@ public class VoteRecord implements Serializable {
 
 	public void setVoteTime(Timestamp voteTime) {
 		this.voteTime = voteTime;
+	}
+
+	public int getCid() {
+		return cid;
+	}
+
+	public void setCid(int cid) {
+		this.cid = cid;
 	}
 }

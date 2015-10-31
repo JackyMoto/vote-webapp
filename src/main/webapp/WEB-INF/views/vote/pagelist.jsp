@@ -15,7 +15,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<table width="100%" border="1">
 		<tr>
 			<td>当前排名</td>
-			<td>名称</td>
+			<td>所属分类</td>
 			<td>描述</td>
 			<td>图片</td>
 			<td>二维码</td>
@@ -26,13 +26,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<tr>
 			<td>${status.index + 1}</td>
 			<td>${vo.vname}</td>
-			<td>${vo.vdesc}</td>
-			<td>${vo.imgPic}</td>
+			<td>${vo.cid}</td>
+			<td><img src="img/A0${vo.cid}/{${vo.imgPic}}"/></td>
 			<td>${vo.qrPic}</td>
 			<td>${vo.currentVote}</td>
 				<td>
 					<form action="vote/dovote.do" method="post" id="form">
 					<input type="hidden" name="voteId" value="${vo.id}"/>
+					<input type="hidden" name="cid" value="${vo.cid}"/>
 					<input type="button" class="button" value="获取投票验证码" />
 					</form>
 				</td>

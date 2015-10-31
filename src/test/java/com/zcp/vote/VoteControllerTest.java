@@ -1,6 +1,8 @@
 package com.zcp.vote;
 
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -17,6 +19,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 //import org.springframework.web.context.WebApplicationContext;
+
+
 
 //import com.zcp.vote.controller.VoteController;
 import com.zcp.vote.entity.VoteObject;
@@ -51,21 +55,36 @@ public class VoteControllerTest {
 	@Test
 	public void getVoteList() throws Exception {
 		
-		VoteObject v1 = new VoteObject("lol", "lol", "lol.png", "lol.png");
-		VoteObject v2 = new VoteObject("dnf", "dnf", "dnf.png", "dnf.png");
-		VoteObject v3 = new VoteObject("cod", "cod", "cod.png", "cod.png");
-		
-//		Mockito.when(service.getVoteList()).thenReturn(Arrays.asList(v1, v2, v3));
-		
-		mockMvc.perform(MockMvcRequestBuilders.get("/vote/pagelist.do"))
-		   .andExpect(MockMvcResultMatchers.status().isOk())
-	       .andExpect(MockMvcResultMatchers.view().name("/vote/pagelist"))  
-	       .andExpect(MockMvcResultMatchers.forwardedUrl("/WEB-INF/views/vote/pagelist.jsp"))
-	       .andExpect(MockMvcResultMatchers.model().attribute("list", Matchers.hasSize(3)))
-	       .andDo(MockMvcResultHandlers.print())
-	       .andReturn();  
-		
-		Mockito.verify(service, Mockito.times(1)).getVoteList();
-		Mockito.verifyNoMoreInteractions(service);
+//		VoteObject v1 = new VoteObject("lol", "lol", "lol.png", "lol.png");
+//		VoteObject v2 = new VoteObject("dnf", "dnf", "dnf.png", "dnf.png");
+//		VoteObject v3 = new VoteObject("cod", "cod", "cod.png", "cod.png");
+//		
+////		Mockito.when(service.getVoteList()).thenReturn(Arrays.asList(v1, v2, v3));
+//		
+//		mockMvc.perform(MockMvcRequestBuilders.get("/vote/pagelist.do"))
+//		   .andExpect(MockMvcResultMatchers.status().isOk())
+//	       .andExpect(MockMvcResultMatchers.view().name("/vote/pagelist"))  
+//	       .andExpect(MockMvcResultMatchers.forwardedUrl("/WEB-INF/views/vote/pagelist.jsp"))
+//	       .andExpect(MockMvcResultMatchers.model().attribute("list", Matchers.hasSize(3)))
+//	       .andDo(MockMvcResultHandlers.print())
+//	       .andReturn();  
+//		
+////		Mockito.verify(service, Mockito.times(1)).getVoteList();
+//		Mockito.verifyNoMoreInteractions(service);
+	}
+	
+	public static void main(String[] args) {
+		String str = "caabbaaaabbabbaa";
+		Pattern p = Pattern.compile("[a]+");
+		Matcher m = p.matcher(str);
+	  	int i = 0;
+	  	while(m.find()){
+	  		String foundStr = m.group();
+	  		System.out.println(foundStr);
+	  		int len = foundStr.length();
+	  		if (len == 2) {
+	  			System.out.println(m.start() + " | " + m.end());
+	  		}
+	  	}
 	}
 }
