@@ -11,9 +11,13 @@ public interface VoteDao {
 	
 	public int addVoteObject(VoteObject vo);
 	
+	public int updateVoteObject(VoteObject vo);
+	
 	public List<VoteObject> queryForList();
 	
 	public List<VoteObject> queryForListByCid(String cid);
+	
+	public VoteObject queryForObjectById(int voteId);
 	
 	public int doVote(VoteRecord record);
 	

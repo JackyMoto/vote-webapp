@@ -11,29 +11,27 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <title>Insert title here</title>
 </head>
 <body>
-	<h1>新增投票内容</h1>
-	<form action="vote/addvote.do" method="post">
+	<h1>更新投票内容</h1>
+	<form action="vote/updatevote.do" method="post">
 		<table width="50%">
 			<tr>
 				<td>名称:</td>
-				<td><input name="vname"/></td>
-			</tr>
-			<tr>
-				<td>类型:</td>
-				<td><input name="cid"/></td>
+				<td><input name="vname" value="${vo.vname}"/></td>
 			</tr>
 			<tr>
 				<td>图片:</td>
-				<td><input name="imgPic"/></td>
+				<td><input name="imgPic" value="${vo.imgPic}"/></td>
 			</tr>
 			<tr>
 				<td>二维码:</td>
-				<td><input name="qrPic"/></td>
+				<td><input name="qrPic" value="${vo.qrPic}"/></td>
 			</tr>
 			<tr>
 				<td><input type="submit"/></td>
 			</tr>
 		</table>
+		<input type="hidden" name="voteId" value="${vo.id}"/>
+		<input type="hidden" name="cid" value="${vo.cid}"/>
 	</form>
 </body>
 </html>

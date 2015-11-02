@@ -208,4 +208,70 @@ public class VoteRedisDaoImpl implements VoteDao {
 		}
 		return true;
 	}
+	
+	@Override
+	public VoteObject queryForObjectById(final int voteId) {
+		final VoteObject vo = new VoteObject();
+		final String resdisKey = VoteConstant.VOTE_DETAILS + voteId + ".";
+    	redisTemplate.execute(new RedisCallback<Integer>() {
+			@Override
+			public Integer doInRedis(RedisConnection connection)
+					throws DataAccessException {
+				RedisSerializer<String> serializer = redisTemplate.getStringSerializer();
+				byte[] keyVname  = serializer.serialize(resdisKey + "name");  
+                byte[] keyCid= serializer.serialize(resdisKey + "cid");
+                byte[] keyImgPic = serializer.serialize(resdisKey + "img");
+                byte[] keyQrPic = serializer.serialize(resdisKey + "qr");
+				
+                String valVname = serializer.deserialize(connection.get(keyVname));
+                String valCid = serializer.deserialize(connection.get(keyCid));
+                String valImgPic = serializer.deserialize(connection.get(keyImgPic));
+                String valQrPic = serializer.deserialize(connection.get(keyQrPic));
+                vo.setId(voteId);
+                vo.setVname(valVname);
+                vo.setCid(Integer.valueOf(valCid));
+                vo.setImgPic(valImgPic);
+                vo.setQrPic(valQrPic);
+                return 0;
+			}
+		});
+    	return vo;
+	}
+
+	@Override
+	public int updateVoteObject(final VoteObject vo) {
+		int result = 0;
+		if (null != vo) {
+			String sql = "update vote_object set vname = :vname, imgPic = :imgPic, qrPic = :qrPic where id = :voteId";
+			Map<String, Object> paramMap = new HashMap<String, Object>();    
+			paramMap.put("vname", vo.getVname());
+			paramMap.put("imgPic", vo.getImgPic());
+			paramMap.put("qrPic", vo.getQrPic());
+			paramMap.put("voteId", vo.getId());
+			result = voteJdbc.update(sql, paramMap);
+	        System.out.println("updateVoteObject result : " + result);
+	        // MySQL写入成功后更新到Redis
+	        if (result > 0) {
+	        	final String resdisKey = VoteConstant.VOTE_DETAILS + vo.getId() + ".";
+	    		redisTemplate.execute(new RedisCallback<Integer>() {
+	    			@Override
+	    			public Integer doInRedis(RedisConnection connection)
+	    					throws DataAccessException {
+	    				RedisSerializer<String> serializer = redisTemplate.getStringSerializer(); 
+	                    byte[] keyVname  = serializer.serialize(resdisKey + "name");  
+	                    byte[] valVname = serializer.serialize(vo.getVname());  
+	                    byte[] keyImgPic = serializer.serialize(resdisKey + "img");
+	                    byte[] valImgPic = serializer.serialize(vo.getImgPic());
+	                    byte[] keyQrPic = serializer.serialize(resdisKey + "qr");
+	                    byte[] valQrPic = serializer.serialize(vo.getQrPic());
+	                    connection.set(keyVname, valVname);
+	                    connection.set(keyImgPic, valImgPic);
+	                    connection.set(keyQrPic, valQrPic);
+	    				return 0;
+	    			}
+	    		});
+	        }
+		}
+		return 0;
+	}
 }

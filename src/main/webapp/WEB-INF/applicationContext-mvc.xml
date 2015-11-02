@@ -35,6 +35,8 @@
 	
 	<!-- 对静态资源文件的访问， 将无法mapping到Controller的path交给default servlet handler处理 -->
 	<mvc:default-servlet-handler/>
+	
+	<mvc:resources location="/WEB-INF/img/" mapping="/img/**"/>
 
 	<!-- 视图文件解析配置 -->
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

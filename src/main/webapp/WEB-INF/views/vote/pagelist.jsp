@@ -15,8 +15,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<table width="100%" border="1">
 		<tr>
 			<td>当前排名</td>
+			<td>名称</td>
 			<td>所属分类</td>
-			<td>描述</td>
 			<td>图片</td>
 			<td>二维码</td>
 			<td>当前票数</td>
@@ -27,8 +27,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<td>${status.index + 1}</td>
 			<td>${vo.vname}</td>
 			<td>${vo.cid}</td>
-			<td><img src="img/A0${vo.cid}/{${vo.imgPic}}"/></td>
-			<td>${vo.qrPic}</td>
+			<td><img src="img/A0${vo.cid}/${vo.imgPic}" width="72" height="72"/></td>
+			<td><img src="img/A0${vo.cid}/${vo.qrPic}" width="72" height="72"/></td>
 			<td>${vo.currentVote}</td>
 				<td>
 					<form action="vote/dovote.do" method="post" id="form">
@@ -36,6 +36,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<input type="hidden" name="cid" value="${vo.cid}"/>
 					<input type="button" class="button" value="获取投票验证码" />
 					</form>
+					<a href="vote/updatevotepage.do?voteId=${vo.id}">更新投票内容</a>
 				</td>
 		</tr>
 		</c:forEach>
@@ -51,7 +52,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<a href="#">19</a>
 				<a href="#">尾页</a>
 			</td>
-			<td><a href="vote/addvotepage.do">添加投票项</a></td>
+			<td>
+				<a href="vote/addvotepage.do">添加投票项</a>
+			</td>
 		</tr>
 	</table>
 </body>

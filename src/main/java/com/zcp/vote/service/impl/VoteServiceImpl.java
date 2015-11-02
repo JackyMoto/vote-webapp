@@ -35,4 +35,25 @@ public class VoteServiceImpl implements VoteService {
 	public boolean initRedisCache() {
 		return dao.initRedisCache();
 	}
+
+	@Override
+	public int updateVoteObject(int id, String vname, String imgPic,
+			String qrPic) {
+		VoteObject vo = dao.queryForObjectById(id);
+		if (null != vo
+				&& null != vo.getVname()
+				&& null != vo.getImgPic()
+				&& null != vo.getQrPic()) {
+			vo.setVname(vname);
+			vo.setImgPic(imgPic);
+			vo.setQrPic(qrPic);
+			return dao.updateVoteObject(vo);
+		}
+		return 0;
+	}
+
+	@Override
+	public VoteObject getVoteObjectById(int voteId) {
+		return dao.queryForObjectById(voteId);
+	}
 }

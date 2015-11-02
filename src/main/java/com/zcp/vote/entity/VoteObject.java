@@ -2,6 +2,8 @@ package com.zcp.vote.entity;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class VoteObject implements Serializable {
 	
 	private static final long serialVersionUID = 6139805683295569327L;

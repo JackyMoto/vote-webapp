@@ -19,20 +19,21 @@ public class CodeUtils {
 		Random random = new Random();
 		// 定义数组存放加减乘除四个运算符   
         // char[] arr = {'+' , '-', '*' , '/' };
+		// 简化只使用加减两个运算符
         char[] arr = {'+' , '-'};
-        // 生成10以内的随机整数num1   
-        int num1 = random.nextInt(10);
-        // 生成10以内的随机整数num2   
-        int num2 = random.nextInt(10);   
-        // 生成一个0-4之间的随机整数operate   
+        // 生成10-20以内的随机整数num1   
+        int num1 = random.nextInt(10) + 11;
+        // 生成1-10以内的随机整数num2   
+        int num2 = random.nextInt(10) + 1;   
+        // 生成一个0-1之间的随机整数operate   
         int operate = random.nextInt(2);
         // 避免出现除数为0的情况   
-        if (operate == 3) {   
-            // 如果是除法, 那除数必须不能为0, 如果为0, 再次生成num2   
-            while (num2 == 0) {   
-                num2 = random.nextInt(10);   
-            }   
-        }
+//        if (operate == 3) {   
+//            // 如果是除法, 那除数必须不能为0, 如果为0, 再次生成num2   
+//            while (num2 == 0) {   
+//                num2 = random.nextInt(10);   
+//            }   
+//        }
         // 运算结果   
         int result = 0;
         // 假定position值0/1/2/3分别代表”+”,”-“,”*”,”/”，计算前面操作数的运算结果   
@@ -55,7 +56,7 @@ public class CodeUtils {
         HttpSession session = request.getSession();   
         session.setAttribute("result", result);
         
-        int width = 60, height = 20;   
+        int width = 70, height = 20;   
         //创建BufferedImage对象，设置图片的长度宽度和色彩。   
         BufferedImage image = new BufferedImage(width, height,BufferedImage.TYPE_INT_RGB);   
         OutputStream os = null;
@@ -104,6 +105,8 @@ public class CodeUtils {
         response.setContentType("image/jpeg");
         //通过ImageIO对象的write静态方法将图片输出。   
 		ImageIO.write(image, "JPEG", os);
+		//暂时保存图片
+		session.setAttribute("image", image);
 		os.close();
 	}
 	/**  
