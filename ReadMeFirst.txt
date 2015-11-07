@@ -12,3 +12,8 @@
 7. 将前端包的html, css ,js发布到HTTP Proxy Server上,提供一个访问静态资源的地址配置给 4中的参数 image.url.prefix
 8. 开始使用平台
 
+PS:
+补充 Redis两个查询和清除命令 
+redis-cli keys "vote*" 
+redis-cli keys "vote*" | xargs redis-cli  del
+

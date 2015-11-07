@@ -148,11 +148,6 @@ public class VoteController {
 		}
 		int res = service.doVote(voteId, cid, voteIP);
 		switch (res) {
-		case 0:
-			json.put("status", 1);
-			json.put("msg", "投票成功");
-			str = callback + "(" + json.toString() + ")";
-			break;
 		case -1:
 			json.put("status", -4);
 			json.put("msg", "系统内部异常,无法进行投票");
@@ -162,6 +157,18 @@ public class VoteController {
 			json.put("status", -5);
 			json.put("msg", "您已经投票，无法进行再次投票");
 			str = callback + "(" + json.toString() + ")";
+			break;
+		default:
+			if (res >= 0) {
+				json.put("status", 1);
+				json.put("msg", "投票成功");
+				json.put("data", res);
+				str = callback + "(" + json.toString() + ")";
+			} else {
+				json.put("status", -8);
+				json.put("msg", "数据返回异常");
+				str = callback + "(" + json.toString() + ")";
+			}
 			break;
 		}
         if (null != session) {

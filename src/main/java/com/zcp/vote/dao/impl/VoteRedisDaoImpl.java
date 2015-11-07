@@ -121,6 +121,7 @@ public class VoteRedisDaoImpl implements VoteDao {
 	}
 
 	public int doVote(final VoteRecord record) {
+		Double result = 0D;
 		if (null == record) {
 			return -1;
 		}
@@ -136,7 +137,7 @@ public class VoteRedisDaoImpl implements VoteDao {
 		ZSetOperations<String, String> setOper = redisTemplate.opsForZSet();
 		try {
 			String cRankKey = VoteConstant.VOTE_RANK_SET + record.getCid();
-			setOper.incrementScore(cRankKey, String.valueOf(record.getVoteId()), d);
+			result = setOper.incrementScore(cRankKey, String.valueOf(record.getVoteId()), d);
  		} catch (Exception e) {
  			e.printStackTrace();
  		}
@@ -162,7 +163,7 @@ public class VoteRedisDaoImpl implements VoteDao {
 		        }
 			}
 		});
-		return 0;
+		return result.intValue();
 	}
 	
 	public int doVoteNoCode(final VoteRecord record) {
