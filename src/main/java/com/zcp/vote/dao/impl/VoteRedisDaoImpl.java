@@ -27,6 +27,7 @@ import com.zcp.vote.constant.VoteConstant;
 import com.zcp.vote.dao.VoteDao;
 import com.zcp.vote.entity.VoteObject;
 import com.zcp.vote.entity.VoteRecord;
+import com.zcp.vote.utils.ThreadPoolUtils;
 @Repository
 public class VoteRedisDaoImpl implements VoteDao {
 	
@@ -79,41 +80,42 @@ public class VoteRedisDaoImpl implements VoteDao {
         return result;
 	}
 
-	public List<VoteObject> queryForListByCid(String cid) {
-		if (StringUtils.isEmpty(cid)) {
-			return null;
-		}
-		final List<VoteObject> result = new ArrayList<VoteObject>();
-		String cRankKey = VoteConstant.VOTE_RANK_SET + cid;
-		Set<TypedTuple<String>> set = redisTemplate.opsForZSet().reverseRangeWithScores(cRankKey, 0, -1);
-		int current = 0;
-		for (TypedTuple<String> s : set) {
-			final String voteId = s.getValue();
-			final int voteNum = s.getScore().intValue();
-			final String resdisKey = VoteConstant.VOTE_DETAILS + voteId + ".";
-			final int rank = ++current;
-			redisTemplate.execute(new RedisCallback<Integer>() {
-				@Override
-				public Integer doInRedis(RedisConnection connection)
-						throws DataAccessException {
-					RedisSerializer<String> serializer = redisTemplate.getStringSerializer();
-					byte[] keyVname  = serializer.serialize(resdisKey + "name");  
-	                byte[] keyCid= serializer.serialize(resdisKey + "cid");
-	                byte[] keyImgPic = serializer.serialize(resdisKey + "img");
-	                byte[] keyQrPic = serializer.serialize(resdisKey + "qr");
-					
-	                String valVname = serializer.deserialize(connection.get(keyVname));
-	                String valCid = serializer.deserialize(connection.get(keyCid));
-	                String valImgPic = serializer.deserialize(connection.get(keyImgPic));
-	                String valQrPic = serializer.deserialize(connection.get(keyQrPic));
-	                VoteObject vo = new VoteObject(valVname, Integer.valueOf(valCid), valImgPic, valQrPic);
-	                vo.setCurrentRank(rank);
-	                vo.setCurrentVote(voteNum);
-	                vo.setId(Integer.valueOf(voteId));
-	                result.add(vo);
-					return 0;
-				}
-			});
+	public Map<String, List<VoteObject>> queryForListFromCache() {
+		final Map<String, List<VoteObject>> result = new HashMap<String, List<VoteObject>>();
+		for (int cid = 1; cid < 6; cid++) {
+			final List<VoteObject> list = new ArrayList<VoteObject>();
+			String cRankKey = VoteConstant.VOTE_RANK_SET + cid;
+			Set<TypedTuple<String>> set = redisTemplate.opsForZSet().reverseRangeWithScores(cRankKey, 0, -1);
+			int current = 0;
+			for (TypedTuple<String> s : set) {
+				final String voteId = s.getValue();
+				final int voteNum = s.getScore().intValue();
+				final String resdisKey = VoteConstant.VOTE_DETAILS + voteId + ".";
+				final int rank = ++current;
+				redisTemplate.execute(new RedisCallback<Integer>() {
+					@Override
+					public Integer doInRedis(RedisConnection connection)
+							throws DataAccessException {
+						RedisSerializer<String> serializer = redisTemplate.getStringSerializer();
+						byte[] keyVname  = serializer.serialize(resdisKey + "name");  
+		                byte[] keyCid= serializer.serialize(resdisKey + "cid");
+		                byte[] keyImgPic = serializer.serialize(resdisKey + "img");
+		                byte[] keyQrPic = serializer.serialize(resdisKey + "qr");
+						
+		                String valVname = serializer.deserialize(connection.get(keyVname));
+		                String valCid = serializer.deserialize(connection.get(keyCid));
+		                String valImgPic = serializer.deserialize(connection.get(keyImgPic));
+		                String valQrPic = serializer.deserialize(connection.get(keyQrPic));
+		                VoteObject vo = new VoteObject(valVname, Integer.valueOf(valCid), valImgPic, valQrPic);
+		                vo.setCurrentRank(rank);
+		                vo.setCurrentVote(voteNum);
+		                vo.setId(Integer.valueOf(voteId));
+		                list.add(vo);
+						return 0;
+					}
+				});
+			}
+			result.put("listA0" + cid, list);
 		}
 		return result;
 	}
@@ -122,12 +124,50 @@ public class VoteRedisDaoImpl implements VoteDao {
 		if (null == record) {
 			return -1;
 		}
-		// 处理IP是否已经投过票
-		if (!"127.0.0.1".equals(record.getVoteIP())) {
-			if (redisTemplate.opsForSet().isMember(VoteConstant.VOTE_IP_SET, record.getVoteIP())) {
-				System.out.println("Redis里已经有此IP的记录，不能继续投票");
-				return -2;
+//		// 处理IP是否已经投过票
+//		if (!"127.0.0.1".equals(record.getVoteIP())) {
+//			if (redisTemplate.opsForSet().isMember(VoteConstant.VOTE_IP_SET, record.getVoteIP())) {
+//				System.out.println("Redis里已经有此IP的记录，不能继续投票");
+//				return -2;
+//			}
+//		}
+		// 添加投票数
+		double d = 1.0;
+		ZSetOperations<String, String> setOper = redisTemplate.opsForZSet();
+		try {
+			String cRankKey = VoteConstant.VOTE_RANK_SET + record.getCid();
+			setOper.incrementScore(cRankKey, String.valueOf(record.getVoteId()), d);
+ 		} catch (Exception e) {
+ 			e.printStackTrace();
+ 		}
+		try {
+			// 添加投票的IP记录
+			redisTemplate.opsForSet().add(VoteConstant.VOTE_IP_SET, record.getVoteIP());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// 投票记录写入MySQL用异步的线程处理，
+		ThreadPoolUtils.getPool().execute(new Runnable() {
+			@Override
+			public void run() {
+				String sql = "insert into vote_record(voteId, cid, voteIP, voteTime) values(:voteId, :cid, :voteIP, :voteTime)";
+				SqlParameterSource ps  = new BeanPropertySqlParameterSource(record);
+				int result = voteJdbc.update(sql, ps);
+		        System.out.println("doVote result : " + result);
+		        if (result > 0) {
+		        	sql = "update vote_object set currentVote = currentVote + 1 where id = :voteId";
+		        	Map<String, Object> paramMap = new HashMap<String, Object>();    
+		        	paramMap.put("voteId", record.getVoteId());
+		        	voteJdbc.update(sql, paramMap);
+		        }
 			}
+		});
+		return 0;
+	}
+	
+	public int doVoteNoCode(final VoteRecord record) {
+		if (null == record) {
+			return -1;
 		}
 		// 添加投票数
 		double d = 1.0;
@@ -145,7 +185,8 @@ public class VoteRedisDaoImpl implements VoteDao {
 			e.printStackTrace();
 		}
 		// 投票记录写入MySQL用异步的线程处理，
-		new Thread(new Runnable() {
+		ThreadPoolUtils.getPool().execute(new Runnable() {
+			@Override
 			public void run() {
 				String sql = "insert into vote_record(voteId, cid, voteIP, voteTime) values(:voteId, :cid, :voteIP, :voteTime)";
 				SqlParameterSource ps  = new BeanPropertySqlParameterSource(record);
@@ -158,18 +199,18 @@ public class VoteRedisDaoImpl implements VoteDao {
 		        	voteJdbc.update(sql, paramMap);
 		        }
 			}
-		}).start();
+		});
 		return 0;
 	}
 
 	@Override
-	public List<VoteObject> queryForList() {
+	public List<VoteObject> queryForListFromDB() {
 		String sql = "select * from vote_object where deleted = 0 order by currentVote desc";
 		return voteJdbc.query(sql, new BeanPropertyRowMapper<VoteObject>(VoteObject.class));
 	}
 	
 	public boolean initRedisCache() {
-		List<VoteObject> list = queryForList();
+		List<VoteObject> list = queryForListFromDB();
 		if (null != list && list.size() > 0) {
 			// 加入被投票的列表
     		ZSetOperations<String, String> setOper = redisTemplate.opsForZSet();
@@ -273,5 +314,45 @@ public class VoteRedisDaoImpl implements VoteDao {
 	        }
 		}
 		return 0;
+	}
+
+	@Override
+	public List<VoteObject> queryForListByCid(String cid) {
+		if (StringUtils.isEmpty(cid)) {
+			return null;
+		}
+		final List<VoteObject> result = new ArrayList<VoteObject>();
+		String cRankKey = VoteConstant.VOTE_RANK_SET + cid;
+		Set<TypedTuple<String>> set = redisTemplate.opsForZSet().reverseRangeWithScores(cRankKey, 0, -1);
+		int current = 0;
+		for (TypedTuple<String> s : set) {
+			final String voteId = s.getValue();
+			final int voteNum = s.getScore().intValue();
+			final String resdisKey = VoteConstant.VOTE_DETAILS + voteId + ".";
+			final int rank = ++current;
+			redisTemplate.execute(new RedisCallback<Integer>() {
+				@Override
+				public Integer doInRedis(RedisConnection connection)
+						throws DataAccessException {
+					RedisSerializer<String> serializer = redisTemplate.getStringSerializer();
+					byte[] keyVname  = serializer.serialize(resdisKey + "name");  
+	                byte[] keyCid= serializer.serialize(resdisKey + "cid");
+	                byte[] keyImgPic = serializer.serialize(resdisKey + "img");
+	                byte[] keyQrPic = serializer.serialize(resdisKey + "qr");
+					
+	                String valVname = serializer.deserialize(connection.get(keyVname));
+	                String valCid = serializer.deserialize(connection.get(keyCid));
+	                String valImgPic = serializer.deserialize(connection.get(keyImgPic));
+	                String valQrPic = serializer.deserialize(connection.get(keyQrPic));
+	                VoteObject vo = new VoteObject(valVname, Integer.valueOf(valCid), valImgPic, valQrPic);
+	                vo.setCurrentRank(rank);
+	                vo.setCurrentVote(voteNum);
+	                vo.setId(Integer.valueOf(voteId));
+	                result.add(vo);
+					return 0;
+				}
+			});
+		}
+		return result;
 	}
 }

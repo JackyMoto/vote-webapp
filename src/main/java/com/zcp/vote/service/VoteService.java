@@ -1,6 +1,7 @@
 package com.zcp.vote.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,9 @@ public interface VoteService {
 	
 	public int updateVoteObject(int id, String vname, String imgPic, String qrPic);
 	
-	public List<VoteObject> getVoteList(String cid);
+	public Map<String, List<VoteObject>> getVoteList();
+	
+	public List<VoteObject> getVoteListByCid(String cid);
 	
 	public VoteObject getVoteObjectById(int voteId);
 	

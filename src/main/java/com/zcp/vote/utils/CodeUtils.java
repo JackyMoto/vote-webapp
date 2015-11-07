@@ -105,8 +105,6 @@ public class CodeUtils {
         response.setContentType("image/jpeg");
         //通过ImageIO对象的write静态方法将图片输出。   
 		ImageIO.write(image, "JPEG", os);
-		//暂时保存图片
-		session.setAttribute("image", image);
 		os.close();
 	}
 	/**  

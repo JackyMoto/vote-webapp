@@ -1,6 +1,7 @@
 package com.zcp.vote.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
@@ -13,13 +14,17 @@ public interface VoteDao {
 	
 	public int updateVoteObject(VoteObject vo);
 	
-	public List<VoteObject> queryForList();
+	public List<VoteObject> queryForListFromDB();
+	
+	public Map<String, List<VoteObject>> queryForListFromCache();
 	
 	public List<VoteObject> queryForListByCid(String cid);
 	
 	public VoteObject queryForObjectById(int voteId);
 	
 	public int doVote(VoteRecord record);
+	
+	public int doVoteNoCode(VoteRecord record);
 	
 	public boolean initRedisCache();
 	

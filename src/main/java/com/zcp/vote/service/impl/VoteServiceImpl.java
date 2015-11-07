@@ -1,6 +1,7 @@
 package com.zcp.vote.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,8 +23,8 @@ public class VoteServiceImpl implements VoteService {
 		return dao.addVoteObject(vo);
 	}
 
-	public List<VoteObject> getVoteList(String cid) {
-		return dao.queryForListByCid(cid);
+	public Map<String, List<VoteObject>> getVoteList() {
+		return dao.queryForListFromCache();
 	}
 
 	public int doVote(int id, int cid, String voteIP) {
@@ -55,5 +56,10 @@ public class VoteServiceImpl implements VoteService {
 	@Override
 	public VoteObject getVoteObjectById(int voteId) {
 		return dao.queryForObjectById(voteId);
+	}
+
+	@Override
+	public List<VoteObject> getVoteListByCid(String cid) {
+		return dao.queryForListByCid(cid);
 	}
 }

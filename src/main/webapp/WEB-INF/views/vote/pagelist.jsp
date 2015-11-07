@@ -27,8 +27,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<td>${status.index + 1}</td>
 			<td>${vo.vname}</td>
 			<td>${vo.cid}</td>
-			<td><img src="img/A0${vo.cid}/${vo.imgPic}" width="72" height="72"/></td>
-			<td><img src="img/A0${vo.cid}/${vo.qrPic}" width="72" height="72"/></td>
+			<td><img src="${imageUrlPrefix}${vo.cid}/${vo.imgPic}" width="72" height="72"/></td>
+			<td><img src="${imageUrlPrefix}${vo.cid}/${vo.qrPic}" width="72" height="72"/></td>
 			<td>${vo.currentVote}</td>
 				<td>
 					<form action="vote/dovote.do" method="post" id="form">
