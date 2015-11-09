@@ -125,9 +125,10 @@ public class VoteRedisDaoImpl implements VoteDao {
 		if (null == record) {
 			return -1;
 		}
+		String redisKey = VoteConstant.VOTE_IP_SET + record.getCid();
 //		// 处理IP是否已经投过票
 		if (!"127.0.0.1".equals(record.getVoteIP())) {
-			if (redisTemplate.opsForSet().isMember(VoteConstant.VOTE_IP_SET, record.getVoteIP())) {
+			if (redisTemplate.opsForSet().isMember(redisKey, record.getVoteIP())) {
 				System.out.println("Redis里已经有此IP的记录，不能继续投票");
 				return -2;
 			}
@@ -143,7 +144,7 @@ public class VoteRedisDaoImpl implements VoteDao {
  		}
 		try {
 			// 添加投票的IP记录
-			redisTemplate.opsForSet().add(VoteConstant.VOTE_IP_SET, record.getVoteIP());
+			redisTemplate.opsForSet().add(redisKey, record.getVoteIP());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -181,7 +182,8 @@ public class VoteRedisDaoImpl implements VoteDao {
  		}
 		try {
 			// 添加投票的IP记录
-			redisTemplate.opsForSet().add(VoteConstant.VOTE_IP_SET, record.getVoteIP());
+			String redisKey = VoteConstant.VOTE_IP_SET + record.getCid();
+			redisTemplate.opsForSet().add(redisKey, record.getVoteIP());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

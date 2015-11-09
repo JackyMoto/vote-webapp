@@ -155,7 +155,7 @@ public class VoteController {
 			break;
 		case -2:
 			json.put("status", -5);
-			json.put("msg", "您已经投票，无法进行再次投票");
+			json.put("msg", "此类奖项您已经投票，无法进行再次投票");
 			str = callback + "(" + json.toString() + ")";
 			break;
 		default:
