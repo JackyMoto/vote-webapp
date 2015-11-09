@@ -126,12 +126,12 @@ public class VoteRedisDaoImpl implements VoteDao {
 			return -1;
 		}
 //		// 处理IP是否已经投过票
-//		if (!"127.0.0.1".equals(record.getVoteIP())) {
-//			if (redisTemplate.opsForSet().isMember(VoteConstant.VOTE_IP_SET, record.getVoteIP())) {
-//				System.out.println("Redis里已经有此IP的记录，不能继续投票");
-//				return -2;
-//			}
-//		}
+		if (!"127.0.0.1".equals(record.getVoteIP())) {
+			if (redisTemplate.opsForSet().isMember(VoteConstant.VOTE_IP_SET, record.getVoteIP())) {
+				System.out.println("Redis里已经有此IP的记录，不能继续投票");
+				return -2;
+			}
+		}
 		// 添加投票数
 		double d = 1.0;
 		ZSetOperations<String, String> setOper = redisTemplate.opsForZSet();
