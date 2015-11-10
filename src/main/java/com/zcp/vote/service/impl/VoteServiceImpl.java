@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zcp.vote.dao.VoteDao;
-import com.zcp.vote.dao.impl.VoteRedisDaoImpl;
 import com.zcp.vote.entity.VoteObject;
 import com.zcp.vote.entity.VoteRecord;
 import com.zcp.vote.service.VoteService;
