@@ -28,4 +28,6 @@ public interface VoteDao {
 	
 	public boolean initRedisCache();
 	
+	public VoteObject getVoteDetails(int voteId);
+	
 }

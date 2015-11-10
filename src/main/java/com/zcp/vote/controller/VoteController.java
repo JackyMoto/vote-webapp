@@ -204,4 +204,33 @@ public class VoteController {
 		service.initRedisCache();
 		return "redirect:/vote/pagelist.do";
 	}
+	
+	@ResponseBody
+	@RequestMapping(value="/vote/votedetails.do")
+	public String getVoteDetails(int voteId, int cid, String callback) {
+		JSONObject json = new JSONObject();
+		String str = null;
+		if (StringUtils.isEmpty(callback)) {
+			callback = "fn";
+		}
+		if (voteId <= 0 || cid <= 0 || cid >= 6) {
+			json.put("status", -1);
+			json.put("msg", "参数不正确");
+			str = callback + "(" + json.toString() + ")";
+			return str;
+		}
+		VoteObject vo = service.getVoteDetails(voteId);
+		if (null != vo) {
+			JsonConfig jsonConfig = new JsonConfig();  
+			jsonConfig.setExcludes(new String[]{"deleted","qrPic", "currentRank"});
+			String data = JSONSerializer.toJSON(vo, jsonConfig).toString();
+			json.put("status", 1);
+			json.put("data", data);
+		} else {
+			json.put("status", -1);
+			json.put("msg", "投票内容不存在");
+		}
+		str = callback + "(" + json.toString() + ")";
+		return str;
+	}
 }

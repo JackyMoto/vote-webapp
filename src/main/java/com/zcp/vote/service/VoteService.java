@@ -22,5 +22,7 @@ public interface VoteService {
 	public int doVote(int id, int cid, String voteIP);
 	
 	public boolean initRedisCache();
-
+	
+	public VoteObject getVoteDetails(int voteId);
+	
 }

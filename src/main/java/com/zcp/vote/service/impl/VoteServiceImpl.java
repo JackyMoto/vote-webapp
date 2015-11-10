@@ -62,4 +62,9 @@ public class VoteServiceImpl implements VoteService {
 	public List<VoteObject> getVoteListByCid(String cid) {
 		return dao.queryForListByCid(cid);
 	}
+
+	@Override
+	public VoteObject getVoteDetails(int voteId) {
+		return dao.getVoteDetails(voteId);
+	}
 }

@@ -127,7 +127,7 @@ public class VoteRedisDaoImpl implements VoteDao {
 			return -1;
 		}
 		String redisKey = VoteConstant.VOTE_IP_SET + TimeUtils.getCurrentDate() + "." + record.getCid();
-//		// 处理IP是否已经投过票
+		// 处理IP是否已经投过票
 		if (!"127.0.0.1".equals(record.getVoteIP())) {
 			if (redisTemplate.opsForSet().isMember(redisKey, record.getVoteIP())) {
 				System.out.println("Redis里已经有此IP的记录，不能继续投票");
@@ -358,5 +358,32 @@ public class VoteRedisDaoImpl implements VoteDao {
 			});
 		}
 		return result;
+	}
+
+	@Override
+	public VoteObject getVoteDetails(final int voteId) {
+		VoteObject vo = null;
+		final String resdisKey = VoteConstant.VOTE_DETAILS + voteId + ".";
+    	redisTemplate.execute(new RedisCallback<Integer>() {
+			@Override
+			public Integer doInRedis(RedisConnection connection)
+					throws DataAccessException {
+				// 初始化投票内容的信息
+				RedisSerializer<String> serializer = redisTemplate.getStringSerializer(); 
+                byte[] keyVname  = serializer.serialize(resdisKey + "name");  
+                byte[] keyCid = serializer.serialize(resdisKey + "cid");
+                byte[] keyImgPic = serializer.serialize(resdisKey + "img");
+                byte[] keyQrPic = serializer.serialize(resdisKey + "qr");
+                
+                String valVname = serializer.deserialize(connection.get(keyVname));
+                String valCid = serializer.deserialize(connection.get(keyCid));
+                String valImgPic = serializer.deserialize(connection.get(keyImgPic));
+                String valQrPic = serializer.deserialize(connection.get(keyQrPic));
+                VoteObject vo = new VoteObject(valVname, Integer.valueOf(valCid), valImgPic, valQrPic);
+                vo.setId(voteId);
+                return 0;
+			}
+		});
+    	return vo;
 	}
 }
