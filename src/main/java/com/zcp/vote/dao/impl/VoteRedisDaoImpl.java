@@ -362,7 +362,7 @@ public class VoteRedisDaoImpl implements VoteDao {
 
 	@Override
 	public VoteObject getVoteDetails(final int voteId) {
-		VoteObject vo = null;
+		final VoteObject vo = new VoteObject();
 		final String resdisKey = VoteConstant.VOTE_DETAILS + voteId + ".";
     	redisTemplate.execute(new RedisCallback<Integer>() {
 			@Override
@@ -379,11 +379,17 @@ public class VoteRedisDaoImpl implements VoteDao {
                 String valCid = serializer.deserialize(connection.get(keyCid));
                 String valImgPic = serializer.deserialize(connection.get(keyImgPic));
                 String valQrPic = serializer.deserialize(connection.get(keyQrPic));
-                VoteObject vo = new VoteObject(valVname, Integer.valueOf(valCid), valImgPic, valQrPic);
                 vo.setId(voteId);
+                vo.setVname(valVname);
+                vo.setCid(Integer.valueOf(valCid));
+                vo.setImgPic(valImgPic);
+                vo.setQrPic(valQrPic);
                 return 0;
 			}
 		});
+    	String cRankKey = VoteConstant.VOTE_RANK_SET + vo.getCid();
+    	Double voteNum = redisTemplate.opsForZSet().score(cRankKey, String.valueOf(vo.getId()));
+    	vo.setCurrentVote(voteNum.intValue());
     	return vo;
 	}
 }

@@ -207,20 +207,20 @@ public class VoteController {
 	
 	@ResponseBody
 	@RequestMapping(value="/vote/votedetails.do")
-	public String getVoteDetails(int voteId, int cid, String callback) {
+	public String getVoteDetails(int voteId, String callback) {
 		JSONObject json = new JSONObject();
 		String str = null;
 		if (StringUtils.isEmpty(callback)) {
 			callback = "fn";
 		}
-		if (voteId <= 0 || cid <= 0 || cid >= 6) {
+		if (voteId <= 0) {
 			json.put("status", -1);
 			json.put("msg", "参数不正确");
 			str = callback + "(" + json.toString() + ")";
 			return str;
 		}
 		VoteObject vo = service.getVoteDetails(voteId);
-		if (null != vo) {
+		if (null != vo && vo.getId() != 0) {
 			JsonConfig jsonConfig = new JsonConfig();  
 			jsonConfig.setExcludes(new String[]{"deleted","qrPic", "currentRank"});
 			String data = JSONSerializer.toJSON(vo, jsonConfig).toString();
