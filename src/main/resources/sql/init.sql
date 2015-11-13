@@ -154,13 +154,17 @@ INSERT INTO `vote_object` VALUES ('109', '5', '熊出没之熊大快跑', 'xcmzx
 INSERT INTO `vote_object` VALUES ('110', '5', '少年三国志', 'snsgz.png', 'snsgz.png', '0', '0', '0');
 INSERT INTO `vote_object` VALUES ('111', '5', '爸爸去哪儿2', 'bbqne2.png', 'bbqne2.png', '0', '0', '0');
 INSERT INTO `vote_object` VALUES ('112', '5', '天龙八部3D', 'tlbb3D.png', 'tlbb3D.png', '0', '0', '0');
-INSERT INTO `vote_object` VALUES ('113', '5', '征途', 'zt.png', 'zt.png', '0', '0', '0');
+INSERT INTO `vote_object` VALUES ('113', '5', '大征途', 'dzt.png', 'dzt.png', '0', '0', '0');
 INSERT INTO `vote_object` VALUES ('114', '5', '大话西游', 'dhxy.png', 'dhxy.png', '0', '0', '0');
 INSERT INTO `vote_object` VALUES ('115', '5', '熊出没2', 'xcm2.png', 'xcm2.png', '0', '0', '0');
 INSERT INTO `vote_object` VALUES ('116', '5', '世界2', 'sj2.png', 'sj2.png', '0', '0', '0');
 INSERT INTO `vote_object` VALUES ('117', '5', '植物大战僵尸无尽版', 'zwdzjswjb.png', 'zwdzjswjb.png', '0', '0', '0');
 
 INSERT INTO `vote_object` VALUES ('118', '1', '神魔', 'sm.png', 'sm.png', '0', '0', '0');
+
+INSERT INTO `vote_object` VALUES ('119', '2', '锂', 'l.png', 'l.png', '0', '0', '0');
+INSERT INTO `vote_object` VALUES ('120', '2', '剑侠情缘', 'jxqy.png', 'jxqy.png', '0', '0', '0');
+INSERT INTO `vote_object` VALUES ('121', '2', '无间狱', 'wjy.png', 'wjy.png', '0', '0', '0');
 -- ----------------------------
 -- Table structure for `vote_record`
 -- ----------------------------
