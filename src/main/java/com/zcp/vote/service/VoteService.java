@@ -11,7 +11,7 @@ public interface VoteService {
 	
 	public int addVoteObject(String name, int cid, String imgPic, String qrPic);
 	
-	public int updateVoteObject(int id, String vname, String imgPic, String qrPic);
+	public int updateVoteObject(int id, String vname, String imgPic, String qrPic, int currentVote);
 	
 	public Map<String, List<VoteObject>> getVoteList();
 	

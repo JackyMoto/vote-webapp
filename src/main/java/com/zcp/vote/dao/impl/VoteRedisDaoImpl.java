@@ -238,6 +238,10 @@ public class VoteRedisDaoImpl implements VoteDao {
 		                connection.setNX(keyCid, valCid);
 		                connection.setNX(keyImgPic, valImgPic);
 		                connection.setNX(keyQrPic, valQrPic);
+		                // 初始化已经投的票数
+		        		ZSetOperations<String, String> setOper = redisTemplate.opsForZSet();
+		        		String cRankKey = VoteConstant.VOTE_RANK_SET + vo.getCid();
+		        		setOper.add(cRankKey, String.valueOf(vo.getId()), vo.getCurrentVote());
 						return 0;
 					}
 				});
@@ -280,6 +284,9 @@ public class VoteRedisDaoImpl implements VoteDao {
                 return 0;
 			}
 		});
+    	String cRankKey = VoteConstant.VOTE_RANK_SET + vo.getCid();
+    	Double voteNum = redisTemplate.opsForZSet().score(cRankKey, String.valueOf(vo.getId()));
+    	vo.setCurrentVote(voteNum.intValue());
     	return vo;
 	}
 
@@ -287,12 +294,14 @@ public class VoteRedisDaoImpl implements VoteDao {
 	public int updateVoteObject(final VoteObject vo) {
 		int result = 0;
 		if (null != vo) {
-			String sql = "update vote_object set vname = :vname, imgPic = :imgPic, qrPic = :qrPic where id = :voteId";
+			String sql = "update vote_object set vname = :vname, imgPic = :imgPic, "
+					+ "qrPic = :qrPic, currentVote = :currentVote where id = :voteId";
 			Map<String, Object> paramMap = new HashMap<String, Object>();    
 			paramMap.put("vname", vo.getVname());
 			paramMap.put("imgPic", vo.getImgPic());
 			paramMap.put("qrPic", vo.getQrPic());
 			paramMap.put("voteId", vo.getId());
+			paramMap.put("currentVote", vo.getCurrentVote());
 			result = voteJdbc.update(sql, paramMap);
 	        System.out.println("updateVoteObject result : " + result);
 	        // MySQL写入成功后更新到Redis
@@ -315,6 +324,15 @@ public class VoteRedisDaoImpl implements VoteDao {
 	    				return 0;
 	    			}
 	    		});
+	    		// 更新排行榜
+	    		ZSetOperations<String, String> setOper = redisTemplate.opsForZSet();
+        		String cRankKey = VoteConstant.VOTE_RANK_SET + vo.getCid();
+        		try {
+        			setOper.add(cRankKey, String.valueOf(vo.getId()), Double.valueOf(vo.getCurrentVote()));
+        		} catch (Exception e) {
+        			e.printStackTrace();
+        		}
+	    		
 	        }
 		}
 		return 0;

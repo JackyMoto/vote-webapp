@@ -18,7 +18,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<td>名称</td>
 			<td>所属分类</td>
 			<td>图片</td>
-			<td>二维码</td>
+<!-- 			<td>二维码</td> -->
 			<td>当前票数</td>
 			<td>操作</td>
 		</tr>
@@ -28,13 +28,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<td>${vo.vname}</td>
 			<td>${vo.cid}</td>
 			<td><img src="${imageUrlPrefix}${vo.cid}/${vo.imgPic}" width="72" height="72"/></td>
-			<td><img src="${imageUrlPrefix}${vo.cid}/${vo.qrPic}" width="72" height="72"/></td>
+<%-- 			<td><img src="${imageUrlPrefix}${vo.cid}/${vo.qrPic}" width="72" height="72"/></td> --%>
 			<td>${vo.currentVote}</td>
 				<td>
 					<form action="vote/dovote.do" method="post" id="form">
 					<input type="hidden" name="voteId" value="${vo.id}"/>
 					<input type="hidden" name="cid" value="${vo.cid}"/>
-					<input type="button" class="button" value="获取投票验证码" />
+<!-- 					<input type="button" class="button" value="获取投票验证码" /> -->
 					</form>
 					<a href="vote/updatevotepage.do?voteId=${vo.id}">更新投票内容</a>
 				</td>

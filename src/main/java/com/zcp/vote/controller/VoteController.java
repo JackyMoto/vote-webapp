@@ -49,25 +49,27 @@ public class VoteController {
 	
 	@RequestMapping(value="/vote/updatevotepage.do")
 	public String updateVotePage(Model model, int voteId) {
-		VoteObject vo =service.getVoteObjectById(voteId);
+		VoteObject vo = service.getVoteObjectById(voteId);
 		model.addAttribute("vo", vo);
 		return "vote/updatevotepage";
 	}
 	
 	@RequestMapping(value="/vote/updatevote.do")
-	public String updateVote(int voteId, int cid, String vname, String imgPic, String qrPic) {
-		service.updateVoteObject(voteId, vname, imgPic, qrPic);
+	public String updateVote(int voteId, int cid, String vname, String imgPic, 
+			String qrPic, int currentVote) {
+		service.updateVoteObject(voteId, vname, imgPic, qrPic, currentVote);
 		return "redirect:/vote/pagelist.do?cid=" + cid;
 	}
 	
 	@RequestMapping(value="/vote/pagelist.do")
-	public String votePageList(Model model) {
-		Map<String, List<VoteObject>> map = service.getVoteList();
-		for (Entry<String, List<VoteObject>> entry : map.entrySet()) {
-			model.addAttribute(entry.getKey(), entry.getValue());
+	public String votePageList(Model model, String cid) {
+		if (StringUtils.isEmpty(cid)) {
+			cid = "1";
 		}
+		List<VoteObject> list = service.getVoteListByCid(cid);
+		model.addAttribute("list", list);
 		model.addAttribute("imageUrlPrefix", imageUrlPrefix);
-		return "index";
+		return "/vote/pagelist";
 	}
 	
 	@ResponseBody
@@ -78,10 +80,6 @@ public class VoteController {
 		}
 		if (StringUtils.isEmpty(callback)) {
 			callback = "fn";
-		}
-		Map<String, List<VoteObject>> map = service.getVoteList();
-		for (Entry<String, List<VoteObject>> entry : map.entrySet()) {
-			model.addAttribute(entry.getKey(), entry.getValue());
 		}
 		List<VoteObject> list = service.getVoteListByCid(cid);
 		model.addAttribute("list", list);

@@ -27,6 +27,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<td><input name="qrPic" value="${vo.qrPic}"/></td>
 			</tr>
 			<tr>
+				<td>当前票数:</td>
+				<td><input name="currentVote" value="${vo.currentVote}"/></td>
+			</tr>
+			<tr>
 				<td><input type="submit"/></td>
 			</tr>
 		</table>

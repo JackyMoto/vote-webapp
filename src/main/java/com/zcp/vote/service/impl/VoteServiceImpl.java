@@ -38,15 +38,17 @@ public class VoteServiceImpl implements VoteService {
 
 	@Override
 	public int updateVoteObject(int id, String vname, String imgPic,
-			String qrPic) {
+			String qrPic, int currentVote) {
 		VoteObject vo = dao.queryForObjectById(id);
 		if (null != vo
 				&& null != vo.getVname()
 				&& null != vo.getImgPic()
-				&& null != vo.getQrPic()) {
+				&& null != vo.getQrPic()
+				&& currentVote != vo.getCurrentVote()) {
 			vo.setVname(vname);
 			vo.setImgPic(imgPic);
 			vo.setQrPic(qrPic);
+			vo.setCurrentVote(currentVote);
 			return dao.updateVoteObject(vo);
 		}
 		return 0;
